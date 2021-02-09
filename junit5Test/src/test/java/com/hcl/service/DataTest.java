@@ -1,17 +1,15 @@
 package com.hcl.service;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.Parameterized.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -47,12 +45,33 @@ public class DataTest {
 	@Test
 	@Rollback(false)
 	public void saveTest() {
-		entity.setEmail("a");
+		entity.setEmail("dfb");
 		entity.setId(2);
 		entity.setFirstname("xfbx");
 		entity.setLastname("xfvbxf");
 		entity.setPassword("xfvbcxfb");
 		entity.setUsername("xdfbxf");
+		r.update(entity);
+		entity.setEmail("a");
+		entity.setId(1);
+		entity.setFirstname("a");
+		entity.setLastname("a");
+		entity.setPassword("a");
+		entity.setUsername("a");
+		r.update(entity);
+		entity.setEmail("b");
+		entity.setId(2);
+		entity.setFirstname("b");
+		entity.setLastname("b");
+		entity.setPassword("b");
+		entity.setUsername("b");
+		r.update(entity);
+		entity.setEmail("c");
+		entity.setId(3);
+		entity.setFirstname("c");
+		entity.setLastname("c");
+		entity.setPassword("c");
+		entity.setUsername("c");
 		r.update(entity);
 	}
 	
@@ -61,56 +80,27 @@ public class DataTest {
 		System.out.println("Close connection to database");
 	}
 
-	@BeforeEach
-	public void setUp() {
-//		entity = new JunitEntity();
-	}
-
-//	@Parameters
-//	public static List<JunitEntity> testconditions() {
-//		List<JunitEntity> list = new ArrayList<>();
-//		entity.setEmail("a");
-//		entity.setId(1);
-//		entity.setFirstname("a");
-//		entity.setLastname("a");
-//		entity.setPassword("a");
-//		entity.setUsername("a");
-//		list.add(entity);
-//		entity.setEmail("b");
-//		entity.setId(2);
-//		entity.setFirstname("b");
-//		entity.setLastname("b");
-//		entity.setPassword("b");
-//		entity.setUsername("b");
-//		list.add(entity);
-//		entity.setEmail("c");
-//		entity.setId(3);
-//		entity.setFirstname("c");
-//		entity.setLastname("c");
-//		entity.setPassword("c");
-//		entity.setUsername("c");
-//		list.add(entity);
-//		return list;
-//	}
-//	
-//	@Test
-//	public void multipleSaveTest() {
-//		for(int i =0;i < )
-//		r.update(entity);
-//	}
-	
 	@Test
 	public void findByUsernameTest() {
-		entity.setUsername("xdfbxf");
+		entity.setUsername("b");
 		JunitEntity news = r.findByUsername(entity.getUsername()).get();
-		assertEquals(news.getId(), entity.getId());
+		assertEquals(news.getUsername(), entity.getUsername());
+		
+		entity.setUsername("dxfbd");
+		
+		Assertions.assertThrows(NoSuchElementException.class, () -> {
+			r.findByUsername(entity.getUsername()).get();
+		  });
 	}
 
 	@Test
 	public void existsByUsernameAndPasswordTest() {
-		entity.setUsername("xdfbxf");
-		entity.setPassword("xfvbcxfb");
+		entity.setUsername("c");
+		entity.setPassword("c");
 		assertTrue(r.existsByUsernameAndPassword(entity.getUsername(), entity.getPassword()));
+		entity.setUsername("2");
+		entity.setPassword("4");
+		assertFalse(r.existsByUsernameAndPassword(entity.getUsername(), entity.getPassword()));
 	}
 
 	@Test

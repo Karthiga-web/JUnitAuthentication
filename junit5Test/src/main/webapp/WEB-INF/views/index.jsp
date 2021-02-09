@@ -14,27 +14,27 @@
 			<table style="with: 50%">
 				<tr>
 					<td>Id</td>
-					<td><input type="number" name="id"></td>
+					<td><input type="number" name="id" required/></td>
 				</tr>
 				<tr>
 					<td>First Name</td>
-					<td><input type="text" name="firstname" /></td>
+					<td><input type="text" name="firstname" required/></td>
 				</tr>
 				<tr>
 					<td>Last Name</td>
-					<td><input type="text" name="lastname" /></td>
+					<td><input type="text" name="lastname" required/></td>
 				</tr>
 				<tr>
 					<td>Email Address</td>
-					<td><input type="text" name="email" /></td>
+					<td><input type="text" name="email" required/></td>
 				</tr>
 				<tr>
 					<td>Username</td>
-					<td><input type="text" name="username" /></td>
+					<td><input type="text" name="username" required/></td>
 				</tr>
 				<tr>
 					<td>Password</td>
-					<td><input type="text" name="password" /></td>
+					<td><input type="text" name="password" required/></td>
 				</tr>
 			</table>
 			<input type="submit" value="Update" />

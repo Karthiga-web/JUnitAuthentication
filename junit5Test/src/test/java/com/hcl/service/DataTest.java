@@ -1,116 +1,123 @@
 package com.hcl.service;
 
-
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runners.Parameterized.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.annotation.Rollback;
+
 import com.hcl.entity.JunitEntity;
-import com.hcl.repository.JunitRepository;
+
+
 @DataJpaTest
 public class DataTest {
 
+	static JunitEntity entity;
 	
-	JunitEntity entity;
-	@Autowired
-	private JunitRepository r;
-	
-	
-//	@Test
-//	public void findByUsername() {
-//		JunitEntity entityj = getJunitEntity();
-//		Optional<JunitEntity> news = r.findByUsername(entityj.getUsername());
-//		
-//		assertTrue(news.isPresent());
-//	}
-//	@Test
-//	public void findById() {
-//		JunitEntity entityj = getJunitEntity();
-//		JunitEntity news = r.findById(entityj.getId()).get();
-//		assertEquals(news.getId(),entityj.getId());
-////		assertTrue(news.isPresent());
-//	}
+	@TestConfiguration
+    static class JunitServiceImplTestContextConfiguration {
+ 
+        @Bean
+        public JunitService employeeService() {
+            return new JunitServiceImpl();
+        }
+    }
 
-	@BeforeEach
-	public void setUp() {
+	@Autowired
+	private JunitServiceImpl r;
+	
+	@BeforeAll
+	static void beforeAll() {
 		entity = new JunitEntity();
+		System.out.println("Initialize connection to database");
 	}
 	
 	@Test
-	public void findByIdTest() {
+	@Rollback(false)
+	public void saveTest() {
 		entity.setEmail("a");
 		entity.setId(2);
 		entity.setFirstname("xfbx");
 		entity.setLastname("xfvbxf");
 		entity.setPassword("xfvbcxfb");
 		entity.setUsername("xdfbxf");
-		r.save(entity);
-//		JunitEntity news = r.findByUsername(entity.getUsername()).get();
-		assertTrue(r.existsByUsernameAndPassword(entity.getUsername(),entity.getPassword()));
-		JunitEntity news = r.findById(entity.getId()).get();
-		assertEquals(news.getId(),entity.getId());
+		r.update(entity);
+	}
+	
+	@AfterAll
+	static void afterAll() {
+		System.out.println("Close connection to database");
 	}
 
-//    @Test
-//    public void whenFindByName_thenReturnUser() {
-//        // given
-//
-//        User dummyUser = new User();
-//        dummyUser.setName("Dummy");
-//        dummyUser.setEmail("test@test.com");
-//        dummyUser.setPassword("password");
-//        entityManager.persist(dummyUser);
-//        entityManager.flush();
-//
-//        // when
-//        User found = userRepository.findByName(dummyUser.getName());
-//
-//        // then
-//
-//        assertEquals(found.getName(), dummyUser.getName());
-//    }
+	@BeforeEach
+	public void setUp() {
+//		entity = new JunitEntity();
+	}
 
-//	@Test
-//	@DisplayName("assert Examples")
-//	public void assertTests() {
-//		JunitEntity entity = new JunitEntity();
-////    	JunitEntity entity1 = new JunitEntity();
+//	@Parameters
+//	public static List<JunitEntity> testconditions() {
+//		List<JunitEntity> list = new ArrayList<>();
 //		entity.setEmail("a");
+//		entity.setId(1);
+//		entity.setFirstname("a");
+//		entity.setLastname("a");
+//		entity.setPassword("a");
+//		entity.setUsername("a");
+//		list.add(entity);
+//		entity.setEmail("b");
 //		entity.setId(2);
-//		entity.setFirstname("xfbx");
-//		entity.setLastname("xfvbxf");
-//		entity.setPassword("xfvbcxfb");
-//		entity.setUsername("xdfbxf");
-//
-////		String a = j.saveMethod(entity);
-//		entity.getEmail();
-//		entityManager.persist(entity);
-//		entityManager.flush();
-////		service.update(entity).getEmail();
-////		entity1 = service.update(entity);
-////		assertEquals(entity.getEmail(),service.update(entity).getEmail());
-////		assertTrue(a.equalsIgnoreCase("Error"));
-////		assertTrue(j.check("d","d"));
-////		assertFalse(j.check("d","cdfbc"));
-//
-//		service.existsByUsernameAndPassword("a", "b");
-//		assertThrows(RuntimeException.class, () -> {
-//			throw new RuntimeException();
-//		});
+//		entity.setFirstname("b");
+//		entity.setLastname("b");
+//		entity.setPassword("b");
+//		entity.setUsername("b");
+//		list.add(entity);
+//		entity.setEmail("c");
+//		entity.setId(3);
+//		entity.setFirstname("c");
+//		entity.setLastname("c");
+//		entity.setPassword("c");
+//		entity.setUsername("c");
+//		list.add(entity);
+//		return list;
 //	}
+//	
+//	@Test
+//	public void multipleSaveTest() {
+//		for(int i =0;i < )
+//		r.update(entity);
+//	}
+	
+	@Test
+	public void findByUsernameTest() {
+		entity.setUsername("xdfbxf");
+		JunitEntity news = r.findByUsername(entity.getUsername()).get();
+		assertEquals(news.getId(), entity.getId());
+	}
 
-	/*
-	 * public void AddAndCheckUser() { JunitServiceImpl service = new
-	 * JunitServiceImpl(); User dummyUser = new User(); dummyUser.setName("Dummy");
-	 * dummyUser.setEmail("test@test.com"); dummyUser.setPassword("password");
-	 * service.AddUser(dummyUser); boolean authenticated =
-	 * service.AuthenticateUser(dummyUser, "password");
-	 * assertThat(authenticated).isEqualTo(true); //assertEquals(authenticated,
-	 * true); }
-	 */
+	@Test
+	public void existsByUsernameAndPasswordTest() {
+		entity.setUsername("xdfbxf");
+		entity.setPassword("xfvbcxfb");
+		assertTrue(r.existsByUsernameAndPassword(entity.getUsername(), entity.getPassword()));
+	}
+
+	@Test
+	public void findByIdTest() {
+		entity.setId(2);
+		JunitEntity news = r.findById(entity.getId()).get();
+		assertEquals(news.getId(), entity.getId());
+	}
 
 }
